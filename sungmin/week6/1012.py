@@ -1,5 +1,3 @@
-from collections import deque
-
 T = int(input())
 D = [(0,1), (1,0), (0,-1), (-1,0)]
 
