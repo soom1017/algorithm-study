@@ -6,24 +6,39 @@ DIR = [(0,1),(1,0),(0,-1),(-1,0)]
 
 in_map = lambda ny, nx : 0 <= ny < N and 0 <= nx < M
 
+def air_side(y, x):
+    ret = 0
+    for dy, dx in DIR:
+        ny = y + dy
+        nx = x + dx
+        if MAP[ny][nx] == 2: ret += 1
+    return ret
+
 def bfs():
     visited = [[0 for _ in range(M)] for _ in range(N)]
     q = deque()
     melt = list()
     
+    MAP[0][0] = 2
     q.append((0,0))
     while q:
-        x, y = q.popleft()
+        y, x = q.popleft()
         for dy, dx in DIR:
             ny, nx = y + dy, x + dx
-            if visited[ny][nx] or not in_map(ny, nx): continue
+            if not in_map(ny, nx) or visited[ny][nx]: continue
             visited[ny][nx] = 1
             
-            if MAP[ny][nx] == 0: q.append((ny, nx))
-            elif MAP[ny][nx] == 1: melt.append((ny, nx))
-    for y, x in melt: MAP[y][x] = 0
-
-    return len(melt)
+            if MAP[ny][nx] == 0 or MAP[ny][nx] == 2:
+                MAP[ny][nx] = 2
+                q.append((ny, nx))
+            elif MAP[ny][nx] == 1:
+                melt.append((ny, nx))
+    
+    not_melt = 0
+    for y, x in melt:
+        if air_side(y, x) >= 2: MAP[y][x] = 0
+        else: not_melt += 1
+    return len(melt) - not_melt
 
 elapsed = 0
 sum_cheeze = 0

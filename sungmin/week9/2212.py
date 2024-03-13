@@ -1,0 +1,5 @@
+N = int(input())
+K = int(input())
+pnt = sorted(list(map(int, input().split())))
+diff = sorted([pnt[i + 1] - pnt[i] for i in range(0, N - 1)], reverse=True)
+print(sum(diff[K-1:]))
